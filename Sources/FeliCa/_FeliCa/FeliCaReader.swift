@@ -140,8 +140,8 @@ open class FeliCaReader: JapanNFCReader {
                 DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
                     self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
                 }
-            case .iso7816, .iso15693:
-                session.invalidate(errorMessage: "This type of NFC tag is not supported. Only FeliCa tags are supported.")
+            case .iso7816, .iso15693,.miFare:
+                session.invalidate(errorMessage: "この種類のNFCタグはサポートされていません。FeliCaタグのみ対応しています")
             default:
                 let retryInterval = DispatchTimeInterval.milliseconds(1000)
                 session.alertMessage = Localized.nfcTagReaderSessionDifferentTagTypeErrorMessage.string()
