@@ -60,7 +60,7 @@ open class FeliCaReader: JapanNFCReader {
             return
         }
         
-        self.session = NFCTagReaderSession(pollingOption: .iso18092, delegate: self)
+        self.session = NFCTagReaderSession(pollingOption: [.iso14443, .iso15693, .iso18092], delegate: self)
         self.session?.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
         self.session?.begin()
     }
@@ -80,6 +80,42 @@ open class FeliCaReader: JapanNFCReader {
         self.delegate?.japanNFCReaderSession(didInvalidateWithError: error)
     }
     
+//    open override func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
+//        if tags.count > 1 {
+//            let retryInterval = DispatchTimeInterval.milliseconds(1000)
+//            session.alertMessage = Localized.nfcTagReaderSessionDidDetectTagsMoreThan1TagIsDetectedMessage.string()
+//            DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
+//                session.restartPolling()
+//                session.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
+//            })
+//            return
+//        }
+//        
+//        let tag = tags.first!
+//        session.connect(to: tag) { (error) in
+//            if nil != error {
+//                session.invalidate(errorMessage: Localized.nfcTagReaderSessionConnectErrorMessage.string())
+//                return
+//            }
+//            
+//            guard case NFCTag.feliCa(let feliCaTag) = tag else {
+//                let retryInterval = DispatchTimeInterval.milliseconds(1000)
+//                session.alertMessage = Localized.nfcTagReaderSessionDifferentTagTypeErrorMessage.string()
+//                DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
+//                    session.restartPolling()
+//                    session.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
+//                })
+//                return
+//            }
+//            
+//            session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
+//            
+//            DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
+//                self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+//            }
+//        }
+//    }
+    
     open override func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
         if tags.count > 1 {
             let retryInterval = DispatchTimeInterval.milliseconds(1000)
@@ -98,20 +134,21 @@ open class FeliCaReader: JapanNFCReader {
                 return
             }
             
-            guard case NFCTag.feliCa(let feliCaTag) = tag else {
+            switch tag {
+            case .feliCa(let feliCaTag):
+                session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
+                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
+                    self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+                }
+            case .iso7816, .iso15693:
+                session.invalidate(errorMessage: "This type of NFC tag is not supported. Only FeliCa tags are supported.")
+            default:
                 let retryInterval = DispatchTimeInterval.milliseconds(1000)
                 session.alertMessage = Localized.nfcTagReaderSessionDifferentTagTypeErrorMessage.string()
                 DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
                     session.restartPolling()
                     session.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
                 })
-                return
-            }
-            
-            session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
-            
-            DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
-                self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
             }
         }
     }
