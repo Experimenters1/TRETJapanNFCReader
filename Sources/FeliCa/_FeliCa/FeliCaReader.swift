@@ -19,6 +19,7 @@ open class FeliCaReader: JapanNFCReader {
     public let delegate: FeliCaReaderSessionDelegate?
     public private(set) var systemCodes: [FeliCaSystemCode] = []
     public private(set) var serviceCodes: [FeliCaSystemCode: [(serviceCode: FeliCaServiceCode, numberOfBlock: Int)]] = [:]
+    public private(set) var cardType: String = ""
     
     private init() {
         fatalError()
@@ -141,6 +142,7 @@ open class FeliCaReader: JapanNFCReader {
                     self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
                 }
             case .iso7816, .iso15693,.miFare:
+                self.cardType = "Unknown card"
                 session.invalidate(errorMessage: "この種類のNFCタグはサポートされていません。FeliCaタグのみ対応しています")
             default:
                 let retryInterval = DispatchTimeInterval.milliseconds(1000)
@@ -163,7 +165,7 @@ open class FeliCaReader: JapanNFCReader {
             if feliCaData[targetSystemCode] == nil {
                 let (pmm, systemCode, error) = feliCaTag.polling(systemCode: targetSystemCode.bigEndian.data, requestCode: .systemCode, timeSlot: .max1)
                 if targetSystemCode.bigEndian.data != systemCode {
-                    feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: "", pmm: pmm.hexString, services: [:])
+                    feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: "", pmm: pmm.hexString, services: [:], cardType: self.cardType)
                     pollingErrors[targetSystemCode] = error
                     continue
                 } else {
