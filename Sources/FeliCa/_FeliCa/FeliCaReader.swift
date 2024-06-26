@@ -190,7 +190,7 @@ open class FeliCaReader: JapanNFCReader {
                 }
             }
             
-            feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: feliCaTag.currentIDm.hexString, pmm: currentPMm.hexString, services: services)
+            feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: feliCaTag.currentIDm.hexString, pmm: currentPMm.hexString, services: services, cardType: self.cardType)
         }
         
         session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
