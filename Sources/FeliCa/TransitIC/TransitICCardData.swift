@@ -17,12 +17,14 @@ public struct TransitICCardData: FeliCaCardData {
     public let type: FeliCaCardType = .transitIC
     public let primaryIDm: String
     public let primarySystemCode: FeliCaSystemCode
+    
     public var contents: [FeliCaSystemCode : FeliCaSystem] = [:] {
         didSet {
             self.convert()
         }
     }
     
+    public var cardType: CardType?
     public var balance: Int?
     public var transactionsData: [Data]?
     public var entryExitInformationsData: [Data]?

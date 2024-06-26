@@ -19,7 +19,8 @@ open class FeliCaReader: JapanNFCReader {
     public let delegate: FeliCaReaderSessionDelegate?
     public private(set) var systemCodes: [FeliCaSystemCode] = []
     public private(set) var serviceCodes: [FeliCaSystemCode: [(serviceCode: FeliCaServiceCode, numberOfBlock: Int)]] = [:]
-    public private(set) var cardType: String = ""
+    public var cardType: CardType?
+   
     
     private init() {
         fatalError()
@@ -142,8 +143,9 @@ open class FeliCaReader: JapanNFCReader {
                     self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
                 }
             case .iso7816, .iso15693,.miFare:
-                self.cardType = "Unknown card"
+                
                 session.invalidate(errorMessage: "この種類のNFCタグはサポートされていません。FeliCaタグのみ対応しています")
+                self.cardType = CardType(cardType: "Unknown card")
             default:
                 let retryInterval = DispatchTimeInterval.milliseconds(1000)
                 session.alertMessage = Localized.nfcTagReaderSessionDifferentTagTypeErrorMessage.string()
@@ -165,7 +167,7 @@ open class FeliCaReader: JapanNFCReader {
             if feliCaData[targetSystemCode] == nil {
                 let (pmm, systemCode, error) = feliCaTag.polling(systemCode: targetSystemCode.bigEndian.data, requestCode: .systemCode, timeSlot: .max1)
                 if targetSystemCode.bigEndian.data != systemCode {
-                    feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: "", pmm: pmm.hexString, services: [:], cardType: self.cardType)
+                    feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: "", pmm: pmm.hexString, services: [:])
                     pollingErrors[targetSystemCode] = error
                     continue
                 } else {
@@ -190,7 +192,7 @@ open class FeliCaReader: JapanNFCReader {
                 }
             }
             
-            feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: feliCaTag.currentIDm.hexString, pmm: currentPMm.hexString, services: services, cardType: self.cardType)
+            feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: feliCaTag.currentIDm.hexString, pmm: currentPMm.hexString, services: services)
         }
         
         session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()

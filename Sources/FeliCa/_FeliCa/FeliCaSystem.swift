@@ -13,18 +13,16 @@ public struct FeliCaSystem: Codable, Equatable {
     public let idm: String
     public let pmm: String
     public let services: [FeliCaServiceCode : FeliCaBlockData]
-    public let cardType: String
     
     public subscript(serviceCode: FeliCaServiceCode) -> FeliCaBlockData? {
         return self.services[serviceCode]
     }
     
-    public init(systemCode: FeliCaSystemCode, idm: String, pmm: String, services: [FeliCaServiceCode : FeliCaBlockData], cardType: String) {
+    public init(systemCode: FeliCaSystemCode, idm: String, pmm: String, services: [FeliCaServiceCode : FeliCaBlockData]) {
         self.systemCode = systemCode
         self.idm = idm
         self.pmm = pmm
         self.services = services
-        self.cardType = cardType
     }
     
     public static func == (lhs: FeliCaSystem, rhs: FeliCaSystem) -> Bool {
@@ -32,7 +30,6 @@ public struct FeliCaSystem: Codable, Equatable {
             lhs.idm == rhs.idm &&
             lhs.pmm == rhs.pmm &&
             lhs.services == rhs.services
-           lhs.cardType == rhs.cardType
     }
 }
 
