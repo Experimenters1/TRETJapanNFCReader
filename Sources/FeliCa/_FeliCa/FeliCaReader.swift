@@ -20,6 +20,7 @@ open class FeliCaReader: JapanNFCReader {
     public private(set) var systemCodes: [FeliCaSystemCode] = []
     public private(set) var serviceCodes: [FeliCaSystemCode: [(serviceCode: FeliCaServiceCode, numberOfBlock: Int)]] = [:]
     public var cardType: CardType?
+    
    
     
     private init() {
@@ -145,13 +146,23 @@ open class FeliCaReader: JapanNFCReader {
             case .iso7816, .iso15693,.miFare:
                 
 //                session.invalidate(errorMessage: "この種類のNFCタグはサポートされていません。FeliCaタグのみ対応しています")
-                session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
-                session.invalidate()
+//                session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
+//                session.invalidate()
+//                DispatchQueue(label: "TRETJPNRCardTypeReader", qos: .default).async {
+//                    self.unknownCardTypeReaderSession(session)
+//                }
+                
+                session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
+                        DispatchQueue(label: "TRETJPNRCardTypeReader", qos: .default).async {
+                            let unknownCard = CardType(cardType: "Unknown card")
+                            self.cardType = unknownCard
+                            session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
+                            session.invalidate()
+                            self.cardTypeReaderSession(didRead: unknownCard)
+                        }
 //                self.cardType = CardType(cardType: "Unknown card")
                 
-                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
-                    self.cardType = CardType(cardType: "Unknown card")
-                }
+                
             default:
                 let retryInterval = DispatchTimeInterval.milliseconds(1000)
                 session.alertMessage = Localized.nfcTagReaderSessionDifferentTagTypeErrorMessage.string()
@@ -162,6 +173,19 @@ open class FeliCaReader: JapanNFCReader {
             }
         }
     }
+    
+    open func unknownCardTypeReaderSession(_ session: NFCTagReaderSession) {
+        let unknownCard = CardType(cardType: "Unknown card")
+        self.cardType = unknownCard
+        
+        session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
+        session.invalidate()
+        self.cardTypeReaderSession(didRead: unknownCard)
+    }
+    
+    open func cardTypeReaderSession(didRead cardType: CardType) {
+            self.delegate?.cardTypeReaderSession(didRead: cardType)
+        }
     
     open func feliCaTagReaderSessionReadWithoutEncryption(_ session: NFCTagReaderSession, feliCaTag: NFCFeliCaTag) {
         var feliCaData: FeliCaData = [:]

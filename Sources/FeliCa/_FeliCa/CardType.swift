@@ -15,4 +15,6 @@ public struct CardType : Codable, Equatable {
     public init( cardType: String) {
         self.cardType = cardType
     }
+    
+   
 }
