@@ -144,7 +144,9 @@ open class FeliCaReader: JapanNFCReader {
                 }
             case .iso7816, .iso15693,.miFare:
                 
-                session.invalidate(errorMessage: "この種類のNFCタグはサポートされていません。FeliCaタグのみ対応しています")
+//                session.invalidate(errorMessage: "この種類のNFCタグはサポートされていません。FeliCaタグのみ対応しています")
+                session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
+                session.invalidate()
                 self.cardType = CardType(cardType: "Unknown card")
             default:
                 let retryInterval = DispatchTimeInterval.milliseconds(1000)

@@ -65,6 +65,8 @@ class ViewController: UIViewController, FeliCaReaderSessionDelegate {
             }
             self.idmLabel.text = "IDm: \(transitICCardData.primaryIDm)"
             self.systemCodeLabel.text = "System Code: \(transitICCardData.primarySystemCode.string)"
+            
+            
         }
         
         self.transitICCardData = transitICCardData
