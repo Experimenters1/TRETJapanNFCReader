@@ -77,8 +77,10 @@ public enum Localized {
     
     public static let nfcReaderSessionAlertMessage = LocalizedItem(
         key: "nfcReaderSessionAlertMessage",
-        ja: "上図に表示されている通りに、カードの下半分を隠すように iPhone をその上に置いてください。",
-        en: "Rest your iPhone on the bottom half of the card, as shown above.",
+//        ja: "上図に表示されている通りに、カードの下半分を隠すように iPhone をその上に置いてください。",
+        ja:"NFCタグをiPhoneの上部（前面または背面カメラ付近）に水平に近づけてください。データ転送が完了するまでそのままお待ちください。" ,
+//        en: "Rest your iPhone on the bottom half of the card, as shown above.",
+        en: "Hold the NFC tag near the top of your iPhone,horizontally,close to the front or rear camera,until data transfer completes.",
         zhHans: "如图中所示将 iPhone 放在卡的下半部份。",
         zhHant: "如圖中所示將 iPhone 放在卡的下半部份。",
         zhHK: "如圖中所示將 iPhone 放在卡的下半部份。"
