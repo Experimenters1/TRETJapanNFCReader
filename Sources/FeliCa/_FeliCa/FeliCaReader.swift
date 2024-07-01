@@ -139,10 +139,18 @@ open class FeliCaReader: JapanNFCReader {
             
             switch tag {
             case .feliCa(let feliCaTag):
-//                session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
-                session.alertMessage = "Hold your iPhone near the FeliCa card. feliCa feliCa feliCa "
+                session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
+             
+//                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
+//                    self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+//                }
+                
                 DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
-                    self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+                    if self.shouldReadFeliCaTag(feliCaTag) {
+                        self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+                    } else {
+                        session.invalidate(errorMessage: "読み取り中にカードが動いたため読み取りに失敗しました。再度お試しください")
+                    }
                 }
             case .iso7816, .iso15693,.miFare:
                 
@@ -173,6 +181,17 @@ open class FeliCaReader: JapanNFCReader {
                 })
             }
         }
+    }
+    
+    open func shouldReadFeliCaTag(_ feliCaTag: NFCFeliCaTag) -> Bool {
+        // Kiểm tra nếu có dữ liệu để đọc từ thẻ FeliCa
+        for targetSystemCode in self.systemCodes {
+            let (pmm, systemCode, _) = feliCaTag.polling(systemCode: targetSystemCode.bigEndian.data, requestCode: .systemCode, timeSlot: .max1)
+            if targetSystemCode.bigEndian.data == systemCode {
+                return true
+            }
+        }
+        return false
     }
     
     open func unknownCardTypeReaderSession(_ session: NFCTagReaderSession) {
