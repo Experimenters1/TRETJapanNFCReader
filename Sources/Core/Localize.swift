@@ -106,7 +106,8 @@ public enum Localized {
     
     public static let nfcTagReaderSessionConnectErrorMessage = LocalizedItem(
         key: "nfcTagReaderSessionConnectErrorMessage",
-        ja: "接続エラーです。もう一度やり直してください。",
+//        ja: "接続エラーです。もう一度やり直してください。",
+        ja: "接続エラーです。",
         en: "Connection error. Please try again.",
         zhHans: "连接错误。请重试。",
         zhHant: "連接錯誤。請重試。",
@@ -124,7 +125,8 @@ public enum Localized {
     
     public static let nfcTagReaderSessionReadingMessage = LocalizedItem(
         key: "nfcTagReaderSessionReadingMessage",
-        ja: "読み取り中…\n カードを iPhone から離さないでください。",
+//        ja: "読み取り中…\n カードを iPhone から離さないでください。",
+        ja: "読み取り中。。。",
         en: "Reading…\n Keep your iPhone resting on the card.",
         zhHans: "读取中…\n 将 iPhone 放在卡片上保持不动。",
         zhHant: "讀取中…\n 將 iPhone 放在卡片上保持不動。",
