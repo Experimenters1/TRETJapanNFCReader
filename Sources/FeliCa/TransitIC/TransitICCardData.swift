@@ -72,7 +72,7 @@ public struct TransitICCardData: FeliCaCardData {
         }
     }
     
-    private mutating func convertToBalance(_ blockData: [Data]) {
+    private mutating func convertToBalance(_ blockData: [Data]) { //check
         let data = blockData.first!
         let balance = data.toIntReversed(11, 12)
         self.balance = balance

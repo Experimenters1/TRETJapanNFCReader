@@ -11,6 +11,10 @@ import CoreNFC
 import TRETJapanNFCReader
 
 class ViewController: UIViewController, FeliCaReaderSessionDelegate {
+    func check_IC_CardReaderSession() {
+        print("OK HUy 2 ")
+    }
+    
     func cardTypeReaderSession(didRead cardType: TRETJapanNFCReader.CardType) {
         print("ok HUy")
     }

@@ -150,6 +150,7 @@ open class FeliCaReader: JapanNFCReader {
                         self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
                     } else {
                         session.invalidate(errorMessage: "読み取り中にカードが動いたため読み取りに失敗しました。再度お試しください")
+                        self.check_IC_CardReaderSession()
                     }
                 }
             case .iso7816, .iso15693,.miFare:
@@ -170,6 +171,7 @@ open class FeliCaReader: JapanNFCReader {
                             self.cardTypeReaderSession(didRead: unknownCard)
                         }
 //                self.cardType = CardType(cardType: "Unknown card")
+                
                 
                 
             default:
@@ -206,6 +208,10 @@ open class FeliCaReader: JapanNFCReader {
     open func cardTypeReaderSession(didRead cardType: CardType) {
             self.delegate?.cardTypeReaderSession(didRead: cardType)
         }
+    
+    open func check_IC_CardReaderSession(){
+        self.delegate?.check_IC_CardReaderSession()
+    }
     
     open func feliCaTagReaderSessionReadWithoutEncryption(_ session: NFCTagReaderSession, feliCaTag: NFCFeliCaTag) {
         var feliCaData: FeliCaData = [:]
