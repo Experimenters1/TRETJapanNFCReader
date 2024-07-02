@@ -196,6 +196,17 @@ open class FeliCaReader: JapanNFCReader {
         return false
     }
     
+    
+    func checkFeliCaData(_ feliCaData: FeliCaData) -> Bool {
+        for (_, system) in feliCaData {
+            if system.idm.isEmpty || system.pmm.isEmpty || system.services.isEmpty {
+                return false
+            }
+        }
+        return true
+    }
+
+    
     open func unknownCardTypeReaderSession(_ session: NFCTagReaderSession) {
         let unknownCard = CardType(cardType: "Unknown card")
         self.cardType = unknownCard
@@ -251,13 +262,18 @@ open class FeliCaReader: JapanNFCReader {
             feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: feliCaTag.currentIDm.hexString, pmm: currentPMm.hexString, services: services)
         }
         
-        session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
-        session.invalidate()
-        self.feliCaReaderSession(
-            didRead: feliCaData,
-            pollingErrors: pollingErrors.isEmpty ? nil : pollingErrors,
-            readErrors: readErrors.isEmpty ? nil : readErrors
-        )
+        if checkFeliCaData(feliCaData) {
+            session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
+            session.invalidate()
+            self.feliCaReaderSession(
+                didRead: feliCaData,
+                pollingErrors: pollingErrors.isEmpty ? nil : pollingErrors,
+                readErrors: readErrors.isEmpty ? nil : readErrors
+            )
+        }else{
+            session.invalidate(errorMessage: "読み取り中にカードが動いたため読み取りに失敗しました。再度お試しください")
+            self.check_IC_CardReaderSession()
+        }
     }
     
     open func feliCaReaderSession(didRead feliCaData: FeliCaData, pollingErrors: [FeliCaSystemCode : Error?]?, readErrors: [FeliCaSystemCode : [FeliCaServiceCode : Error]]?) {
