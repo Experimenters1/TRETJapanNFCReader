@@ -160,16 +160,26 @@ open class FeliCaReader: JapanNFCReader {
                         self.checkBalance(tag: feliCaTag) { success in
                             if success {
                                 self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+                                print("5fb4bf56d1b56f1b56f1b56fd1b56fdb1fdb1fd61bfd1bfd1b65df1b5fd1b51fdb5fd1bf56d1b5f6d1b56f1b56fd1 .")
                             } else {
                                 session.invalidate(errorMessage: "接続エラーです。")
                                 self.check_IC_CardReaderSession()
+                                print("Rdwrdffdeytfegfegfgefbefb5bvfs1bv456f1b5f1b5f1b1f1bf21bf1bfd51bf561bfd561b56f1b56f1b561. ")
                             }
                         }
                     } else {
                         session.invalidate(errorMessage: "読み取り中にカードが動いたため読み取りに失敗しました。再度お試しください")
                         self.check_IC_CardReaderSession()
+                        
+                        print("Ư5%vhdvfnbjkfnbjfnmbfbfdb45fg4bn154gbn56g4nb564gn545dg41n56g4f1n54gd1n541n156fg1n51n56gd1n65gd1n465gd1n456g1n65g1n6g1n")
                     }
+                    
+                    print("GGGGYGHFHygfrfyhguhgvsdhgvfhgvfdnbjfnbijfnb&fbvhfkbjnfjkbnjkfnbjfnbjfnbjfnbjfgnbjfnbjf)%fhvbfhbfbjnfjbnf47484548454845")
+
                 }
+                
+                print("@#%^&&&&&&&hudgvfhbvhkfsbvjsdfhvjsvjsfb526f5db6fb6f5db6f5b6f5b65dfb66fd5b65b6d5b65b5b5d")
+                
             case .iso7816, .iso15693,.miFare:
                 
 //                session.invalidate(errorMessage: "この種類のNFCタグはサポートされていません。FeliCaタグのみ対応しています")
