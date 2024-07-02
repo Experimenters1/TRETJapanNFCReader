@@ -160,7 +160,7 @@ open class FeliCaReader: JapanNFCReader {
                             if success {
                                 self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
                             } else {
-                                session.invalidate(errorMessage: "読み取り中にカードが動いたため読み取りに失敗しました。再度お試しください")
+                                session.invalidate(errorMessage: "接続エラーです。")
                                 self.check_IC_CardReaderSession()
                             }
                         }
