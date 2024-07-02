@@ -165,17 +165,19 @@ open class FeliCaReader: JapanNFCReader {
                 
                 DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
                     if self.shouldReadFeliCaTag(feliCaTag) {
-                        self.checkBalance(tag: feliCaTag) { success in
-                            if success {
-                                self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
-                                print("5fb4bf56d1b56f1b56f1b56fd1b56fdb1fdb1fd61bfd1bfd1b65df1b5fd1b51fdb5fd1bf56d1b5f6d1b56f1b56fd1 .")
-                            } else {
-                                session.invalidate(errorMessage: "接続エラーです。")
-                                self.check_IC_CardReaderSession()
-                                print("Rdwrdffdeytfegfegfgefbefb5bvfs1bv456f1b5f1b5f1b1f1bf21bf1bfd51bf561bfd561b56f1b56f1b561. ")
-                            }
-                            print("em em em em ok ok ok ok ok ok ok ok ok ")
-                        }
+//                        self.checkBalance(tag: feliCaTag) { success in
+//                            if success {
+//                                self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+//                                print("5fb4bf56d1b56f1b56f1b56fd1b56fdb1fdb1fd61bfd1bfd1b65df1b5fd1b51fdb5fd1bf56d1b5f6d1b56f1b56fd1 .")
+//                            } else {
+//                                session.invalidate(errorMessage: "接続エラーです。")
+//                                self.check_IC_CardReaderSession()
+//                                print("Rdwrdffdeytfegfegfgefbefb5bvfs1bv456f1b5f1b5f1b1f1bf21bf1bfd51bf561bfd561b56f1b56f1b561. ")
+//                            }
+//                            print("em em em em ok ok ok ok ok ok ok ok ok ")
+//                        }
+                        
+                        self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
                         print("Appe ok huy huy huyh huy huy huy")
                         
                     } else {
