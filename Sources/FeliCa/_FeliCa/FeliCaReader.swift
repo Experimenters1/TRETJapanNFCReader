@@ -70,6 +70,9 @@ open class FeliCaReader: JapanNFCReader {
     
     open override func tagReaderSession(_ session: NFCTagReaderSession, didInvalidateWithError error: Error) {
         if let readerError = error as? NFCReaderError {
+            if readerError.code == .readerSessionInvalidationErrorUserCanceled {
+                print("5fb4bf56d1b56f1b56f1b56fd1b56fdb1fdb1fd61bdf54545%fvhdjhvjd bo huy")
+            }
             if (readerError.code != .readerSessionInvalidationErrorFirstNDEFTagRead)
                 && (readerError.code != .readerSessionInvalidationErrorUserCanceled) {
                 print("""
@@ -78,14 +81,12 @@ open class FeliCaReader: JapanNFCReader {
                     FeliCa カードを読み取るには、開発している iOS Application の Info.plist に "ISO18092 system codes for NFC Tag Reader Session (com.apple.developer.nfc.readersession.felica.systemcodes)" を追加します。ワイルドカードは使用できません。ISO18092 system codes for NFC Tag Reader Session にシステムコードを追加します。
                     ------------------------------------------------------------
                 """)
-            }else if readerError.code == .readerSessionInvalidationErrorUserCanceled  {
-                if session.alertMessage == Localized.nfcTagReaderSessionReadingMessage.string() {
-                    print("huy1 fvfvfvfvfvfdvfdvfdvfdvfdvfvfdvfvfdvfdvfvfvdfvfdvfdvdfbfvvvvbvdbdvbvdbd")
-                }
             }
         }
         self.delegate?.japanNFCReaderSession(didInvalidateWithError: error)
+        print("5fb4bf56d1b56f1b56f1b56fd1b56fdb1fdb1fd61bdf54545%fvhdjhvjd bo huy con huy")
     }
+    
     
     
     
@@ -146,8 +147,8 @@ open class FeliCaReader: JapanNFCReader {
             
             switch tag {
             case .feliCa(let feliCaTag):
-            session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
-//                session.alertMessage = "huy"
+//                session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
+                session.alertMessage = "huy"
              
 //                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
 //                    self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
@@ -328,6 +329,7 @@ open class FeliCaReader: JapanNFCReader {
     
     open func feliCaReaderSession(didRead feliCaData: FeliCaData, pollingErrors: [FeliCaSystemCode : Error?]?, readErrors: [FeliCaSystemCode : [FeliCaServiceCode : Error]]?) {
         self.delegate?.feliCaReaderSession(didRead: feliCaData, pollingErrors: pollingErrors, readErrors: readErrors)
+        print("Sam yeu oi dfvfsdvfvfdvfvfvfvsdfv")
     }
     
     @available(*, unavailable)
