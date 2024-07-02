@@ -78,10 +78,17 @@ open class FeliCaReader: JapanNFCReader {
                     FeliCa カードを読み取るには、開発している iOS Application の Info.plist に "ISO18092 system codes for NFC Tag Reader Session (com.apple.developer.nfc.readersession.felica.systemcodes)" を追加します。ワイルドカードは使用できません。ISO18092 system codes for NFC Tag Reader Session にシステムコードを追加します。
                     ------------------------------------------------------------
                 """)
+            }else if readerError.code == .readerSessionInvalidationErrorUserCanceled  {
+                if session.alertMessage == Localized.nfcTagReaderSessionReadingMessage.string() {
+                    print("huy1 fvfvfvfvfvfdvfdvfdvfdvfdvfvfdvfvfdvfdvfvfvdfvfdvfdvdfbfvvvvbvdbdvbvdbd")
+                }
             }
         }
         self.delegate?.japanNFCReaderSession(didInvalidateWithError: error)
     }
+    
+    
+    
     
 //    open override func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
 //        if tags.count > 1 {
