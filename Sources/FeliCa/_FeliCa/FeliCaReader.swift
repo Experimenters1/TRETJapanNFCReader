@@ -174,7 +174,10 @@ open class FeliCaReader: JapanNFCReader {
                                 self.check_IC_CardReaderSession()
                                 print("Rdwrdffdeytfegfegfgefbefb5bvfs1bv456f1b5f1b5f1b1f1bf21bf1bfd51bf561bfd561b56f1b56f1b561. ")
                             }
+                            print("em em em em ok ok ok ok ok ok ok ok ok ")
                         }
+                        print("Appe ok huy huy huyh huy huy huy")
+                        
                     } else {
                         session.invalidate(errorMessage: "読み取り中にカードが動いたため読み取りに失敗しました。再度お試しください")
                         self.check_IC_CardReaderSession()
