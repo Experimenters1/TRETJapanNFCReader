@@ -78,6 +78,9 @@ public struct TransitICCardData: FeliCaCardData {
         self.balance = balance
     }
     
+
+
+    
     private mutating func convertToTransactions(_ blockData: [Data]) {
         self.transactionsData = blockData
     }
