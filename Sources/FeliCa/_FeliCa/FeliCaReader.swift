@@ -150,9 +150,9 @@ open class FeliCaReader: JapanNFCReader {
                 session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
 //                session.alertMessage = "huy"
              
-                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
-                    self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
-                }
+//                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
+//                    self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+//                }
                 
                 DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
                     if self.shouldReadFeliCaTag(feliCaTag) {
