@@ -127,6 +127,14 @@ open class FeliCaReader: JapanNFCReader {
 //        }
 //    }
     
+    private func validateBlockData(_ blockData: [Data]) -> Bool {
+           guard let data = blockData.first else {
+               return false
+           }
+           let balance = data.toIntReversed(11, 12)
+           return balance != nil
+       }
+    
     open override func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
         if tags.count > 1 {
             let retryInterval = DispatchTimeInterval.milliseconds(1000)
@@ -154,14 +162,15 @@ open class FeliCaReader: JapanNFCReader {
 //                    self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
 //                }
                 
-                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
-                    if self.shouldReadFeliCaTag(feliCaTag) {
-                        self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
-                    } else {
-                        session.invalidate(errorMessage: "読み取り中にカードが動いたため読み取りに失敗しました。再度お試しください")
-                        self.check_IC_CardReaderSession()
-                    }
-                }
+//                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
+//                    if self.shouldReadFeliCaTag(feliCaTag) {
+//                        self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+//                    } else {
+//                        session.invalidate(errorMessage: "接続エラーです。")
+//                        self.check_IC_CardReaderSession()
+//                    }
+//                }
+                
                 
 //                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
 //                    if self.shouldReadFeliCaTag(feliCaTag) {
@@ -191,8 +200,27 @@ open class FeliCaReader: JapanNFCReader {
 //                    print("GGGGYGHFHygfrfyhguhgvsdhgvfhgvfdnbjfnbijfnb&fbvhfkbjnfjkbnjkfnbjfnbjfnbjfnbjfgnbjfnbjf)%fhvbfhbfbjnfjbnf47484548454845")
 //
 //                }
-//                
-//                print("@#%^&&&&&&&hudgvfhbvhkfsbvjsdfhvjsvjsfb526f5db6fb6f5db6f5b6f5b65dfb66fd5b65b6d5b65b5b5d")
+                
+                
+                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
+                    if self.shouldReadFeliCaTag(feliCaTag) {
+                        let serviceCodeData = self.serviceCodes[self.systemCodes.first!]!
+                        let blockList = (0..<serviceCodeData.first!.numberOfBlock).map { (block) -> Data in
+                            Data([0x80, UInt8(block)])
+                        }
+                        let (_, _, blockData, _) = feliCaTag.readWithoutEncryption36(serviceCode: serviceCodeData.first!.serviceCode.data, blockList: blockList)
+                        if self.validateBlockData(blockData) {
+                            self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+                        } else {
+                            session.invalidate(errorMessage: "Dữ liệu không hợp lệ")
+                        }
+                    } else {
+                        session.invalidate(errorMessage: "読み取り中にカードが動いたため読み取りに失敗しました。再度お試しください")
+                        self.check_IC_CardReaderSession()
+                    }
+                }
+                
+                print("@#%^&&&&&&&hudgvfhbvhkfsbvjsdfhvjsvjsfb526f5db6fb6f5db6f5b6f5b65dfb66fd5b65b6d5b65b5b5d")
                 
             case .iso7816, .iso15693,.miFare:
                 
