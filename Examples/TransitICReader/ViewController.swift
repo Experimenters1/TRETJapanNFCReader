@@ -15,9 +15,7 @@ class ViewController: UIViewController, FeliCaReaderSessionDelegate {
         print("OK HUy 2 ")
     }
     
-    func cardTypeReaderSession(didRead cardType: TRETJapanNFCReader.CardType) {
-        print("ok HUy")
-    }
+
     
     
     var reader: TransitICReader!

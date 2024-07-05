@@ -24,7 +24,7 @@ public struct TransitICCardData: FeliCaCardData {
         }
     }
     
-    public var cardType: CardType?
+  
     public var balance: Int?
     public var transactionsData: [Data]?
     public var entryExitInformationsData: [Data]?

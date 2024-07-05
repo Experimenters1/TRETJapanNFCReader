@@ -20,7 +20,7 @@ public protocol FeliCaReaderSessionDelegate: JapanNFCReaderSessionDelegate {
     func feliCaReaderSession(didRead feliCaData: FeliCaData, pollingErrors: [FeliCaSystemCode : Error?]?, readErrors: [FeliCaSystemCode : [FeliCaServiceCode : Error]]?)
     
     
-    func cardTypeReaderSession(didRead cardType: CardType)
+  
     
     func check_IC_CardReaderSession()
     
