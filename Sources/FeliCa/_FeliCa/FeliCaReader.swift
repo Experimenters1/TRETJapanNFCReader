@@ -115,14 +115,28 @@ open class FeliCaReader: JapanNFCReader {
             
             switch tag {
             case .feliCa(let feliCaTag):
-                session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
-                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
-                    self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+                if self.shouldReadFeliCaTag(feliCaTag) {
+                    session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
+                    DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
+                        self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+                    }
+                }else{
+                    self.check_IC_CardReaderSession()
+                    session.invalidate(errorMessage: Localized.nfcTagReaderSessionConnectErrorMessage.string())
                 }
-            default:
+                
+            case .iso7816, .iso15693,.miFare:
+                self.check_IC_CardReaderSession()
                 session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
                 session.invalidate()
-                self.check_IC_CardReaderSession()
+                
+            default:
+                let retryInterval = DispatchTimeInterval.milliseconds(1000)
+                session.alertMessage = Localized.nfcTagReaderSessionDifferentTagTypeErrorMessage.string()
+                DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
+                    session.restartPolling()
+                    session.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
+                })
             }
         }
     }
@@ -132,7 +146,17 @@ open class FeliCaReader: JapanNFCReader {
     
     
     
-    
+    open func shouldReadFeliCaTag(_ feliCaTag: NFCFeliCaTag) -> Bool {
+        // Kiểm tra nếu có dữ liệu để đọc từ thẻ FeliCa
+        for targetSystemCode in self.systemCodes {
+            let (pmm, systemCode, _) = feliCaTag.polling(systemCode: targetSystemCode.bigEndian.data, requestCode: .systemCode, timeSlot: .max1)
+            if targetSystemCode.bigEndian.data == systemCode {
+                return true
+            }
+        }
+        return false
+    }
+
     
    
     
@@ -166,6 +190,10 @@ open class FeliCaReader: JapanNFCReader {
                 let blockList = (0..<numberOfBlock).map { (block) -> Data in
                     Data([0x80, UInt8(block)])
                 }
+                
+                print()
+                print("vsfjbjfnbjfbjkcusbnjfnjbnbjnbjnbjxnbxn : ",blockList)
+                print()
                 let (status1, status2, blockData, error) = feliCaTag.readWithoutEncryption36(serviceCode: serviceCode.data, blockList: blockList)
                 services[serviceCode] = FeliCaBlockData(status1: status1, status2: status2, blockData: blockData)
                 if let error = error {
