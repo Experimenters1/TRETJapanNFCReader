@@ -93,13 +93,7 @@ open class FeliCaReader: JapanNFCReader {
     
 
     
-    private func validateBlockData(_ blockData: [Data]) -> Bool {
-           guard let data = blockData.first else {
-               return false
-           }
-           let balance = data.toIntReversed(11, 12)
-           return balance != nil
-       }
+
     
     open override func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
         if tags.count > 1 {
@@ -127,14 +121,9 @@ open class FeliCaReader: JapanNFCReader {
                 
                 DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
                     if self.shouldReadFeliCaTag(feliCaTag) {
-                        let serviceCodeData = self.serviceCodes[self.systemCodes.first!]!
-                        let blockList = (0..<serviceCodeData.first!.numberOfBlock).map { (block) -> Data in
-                            Data([0x80, UInt8(block)])
-                        }
-                        let (_, _, blockData, _) = feliCaTag.readWithoutEncryption36(serviceCode: serviceCodeData.first!.serviceCode.data, blockList: blockList)
-                        if self.validateBlockData(blockData) {
+                        if self.checkFeliCaTagData(feliCaTag) {
                             self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
-                        } else {
+                        } else{
                             session.invalidate(errorMessage: Localized.nfcTagReaderSessionConnectErrorMessage.string())
                             self.check_IC_CardReaderSession()
                         }
@@ -185,6 +174,23 @@ open class FeliCaReader: JapanNFCReader {
         return false
     }
     
+    
+    func checkFeliCaTagData(_ feliCaTag: NFCFeliCaTag) -> Bool {
+            for targetSystemCode in self.systemCodes {
+                let serviceCodeData = self.serviceCodes[targetSystemCode]!
+                for (serviceCode, numberOfBlock) in serviceCodeData {
+                    let blockList = (0..<numberOfBlock).map { (block) -> Data in
+                        Data([0x80, UInt8(block)])
+                    }
+                    let (status1, status2, blockData, error) = feliCaTag.readWithoutEncryption36(serviceCode: serviceCode.data, blockList: blockList)
+
+                    if blockList.isEmpty || blockData.isEmpty || serviceCodeData.isEmpty {
+                        return false
+                    }
+                }
+            }
+            return true
+        }
     
     
     
