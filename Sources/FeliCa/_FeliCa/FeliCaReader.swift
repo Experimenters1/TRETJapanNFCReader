@@ -146,7 +146,7 @@ open class FeliCaReader: JapanNFCReader {
                             session.invalidate()
                             self.check_IC_CardReaderSession()
                         }
-//                self.cardType = CardType(cardType: "Unknown card")
+
                 
                 
                 
@@ -242,7 +242,7 @@ open class FeliCaReader: JapanNFCReader {
             feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: feliCaTag.currentIDm.hexString, pmm: currentPMm.hexString, services: services)
         }
         
-//        session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
+        session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
         session.invalidate()
         self.feliCaReaderSession(
             didRead: feliCaData,
