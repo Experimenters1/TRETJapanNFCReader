@@ -64,7 +64,7 @@ open class FeliCaReader: JapanNFCReader {
         }
         
         self.session = NFCTagReaderSession(pollingOption: [.iso14443, .iso15693, .iso18092], delegate: self)
-        self.session?.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
+//        self.session?.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
         self.session?.begin()
     }
     
@@ -242,7 +242,7 @@ open class FeliCaReader: JapanNFCReader {
             feliCaData[targetSystemCode] = FeliCaSystem(systemCode: targetSystemCode, idm: feliCaTag.currentIDm.hexString, pmm: currentPMm.hexString, services: services)
         }
         
-        session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
+//        session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
         session.invalidate()
         self.feliCaReaderSession(
             didRead: feliCaData,
@@ -253,7 +253,7 @@ open class FeliCaReader: JapanNFCReader {
     
     open func feliCaReaderSession(didRead feliCaData: FeliCaData, pollingErrors: [FeliCaSystemCode : Error?]?, readErrors: [FeliCaSystemCode : [FeliCaServiceCode : Error]]?) {
         self.delegate?.feliCaReaderSession(didRead: feliCaData, pollingErrors: pollingErrors, readErrors: readErrors)
-        print("Sam yeu oi dfvfsdvfvfdvfvfvfvsdfv")
+       
     }
     
     @available(*, unavailable)
