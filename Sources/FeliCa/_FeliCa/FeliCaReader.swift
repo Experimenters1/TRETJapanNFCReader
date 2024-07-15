@@ -125,11 +125,11 @@ open class FeliCaReader: JapanNFCReader {
                             self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
                         } else{
                             session.invalidate(errorMessage: Localized.nfcTagReaderSessionConnectErrorMessage.string())
-                            self.check_IC_CardReaderSession()
+                            self.Crash_app_IC_CardReaderSession()
                         }
                     } else {
                         session.invalidate(errorMessage: Localized.nfcTagReaderSessionConnectErrorMessage.string())
-                        self.check_IC_CardReaderSession()
+                        self.Crash_app_IC_CardReaderSession()
                     }
                 }
                 
@@ -198,6 +198,10 @@ open class FeliCaReader: JapanNFCReader {
     
     open func check_IC_CardReaderSession(){
         self.delegate?.check_IC_CardReaderSession()
+    }
+    
+    open func Crash_app_IC_CardReaderSession(){
+        self.delegate?.Crash_app_IC_CardReaderSession()
     }
     
     open func feliCaTagReaderSessionReadWithoutEncryption(_ session: NFCTagReaderSession, feliCaTag: NFCFeliCaTag) {

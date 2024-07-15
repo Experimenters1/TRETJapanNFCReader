@@ -24,6 +24,8 @@ public protocol FeliCaReaderSessionDelegate: JapanNFCReaderSessionDelegate {
     
     func check_IC_CardReaderSession()
     
+    func Crash_app_IC_CardReaderSession()
+    
     // @available(*, unavailable)
     // func feliCaReaderSession(didRead feliCaCard: FeliCaCard)
 }
