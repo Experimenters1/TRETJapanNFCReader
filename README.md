@@ -367,26 +367,18 @@ FeliCa thuộc tiêu chuẩn NFC-F.<br><br>
 Dịch vụ ngẫu nhiên là dịch vụ mà người dùng có thể truy cập bằng cách tự do chỉ định các khối. <br><br>
 Dịch vụ tuần hoàn là dịch vụ ghi vào khối cũ nhất. Được sử dụng để ghi nhật ký, v.v. <br><br>
 Dịch vụ phân tích cú pháp là dịch vụ có chức năng xử lý một phần dữ liệu khối dưới dạng giá trị số và giảm giá trị của nó. <br><br>
+Mặc dù không được liệt kê trong bảng trên nhưng cũng có một thứ gọi là dịch vụ chồng chéo. <br><br>
+Việc chia sẻ và quản lý nhiều khối dữ liệu bằng nhiều dịch vụ được gọi là dịch vụ chồng chéo và các dịch vụ được đề cập được gọi là dịch vụ chồng chéo.<br><br>
+Để biết thêm thông tin, vui lòng tham khảo Hướng dẫn sử dụng thẻ FeliCa Trích đoạn: 3.4.3, 3.4.4, 3.4.5. <br><br>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+#### khối
+Một khối là một đơn vị 16 byte để ghi/đọc. <br><br>
+Tất cả thông tin người dùng được lưu trữ trong khối này. <br><br>
 
 
 
     
     
- 
       
   + ) NFC là một tiêu chuẩn giao tiếp trường gần.
 ### 3. bản tóm tắt
