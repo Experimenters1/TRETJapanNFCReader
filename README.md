@@ -374,10 +374,14 @@ Việc chia sẻ và quản lý nhiều khối dữ liệu bằng nhiều dịch
 #### khối
 Một khối là một đơn vị 16 byte để ghi/đọc. <br><br>
 Tất cả thông tin người dùng được lưu trữ trong khối này. <br><br>
+Nó cũng lưu trữ thông tin quan trọng và thông tin quản lý hệ thống tập tin. <br><br>
+Đơn vị truy cập của người dùng cũng là một khối nên để lưu trữ thông tin trên 16 byte cần phải chia thông tin đó thành nhiều khối. <br><br>
+Hệ thống tập tin quản lý tất cả các khối trong vùng bộ nhớ cố định. <br><br>
+Sử dụng Khu vực và Dịch vụ để truy cập các khối mà người dùng sử dụng. <br><br> 
 
+![image](https://github.com/user-attachments/assets/79189609-c0ca-4e86-8eaf-ec09f845a874)
 
-
-    
+   
     
       
   + ) NFC là một tiêu chuẩn giao tiếp trường gần.
