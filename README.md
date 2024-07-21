@@ -419,9 +419,31 @@ Có quy định rõ ràng rằng tùy thuộc vào hệ thống số nhận dạ
 Bảng sau đây được giới thiệu trong tài liệu như một ví dụ về mã nhà sản xuất và hệ thống số nhận dạng thẻ cũng như cách sử dụng sản phẩm thẻ. <br><br> 
 
 
+|  Mã nhà sản xuất   | Hệ thống số nhận dạng thẻ     | Ví dụ sử dụng sản phẩm thẻ    |
+|------------------|-----------|-------------------------------|
+|  01 FE   | Số ngẫu nhiên (được chỉ định theo ISO/IEC 18092 (NFCIP-1)) |Sản phẩm tương thích NFCIP-1|
+|  02 FE   | Không có hệ thống đánh số |Thẻ loại 3 của diễn đàn NFC|
+|  03 FE  | Hệ thống đánh số bao gồm mã định dạng dữ liệu do Sony quy định |FeliCa Plug|
+|  XX FE không phải ở trên  | sự đặt chỗ ||
+|  Khác với những điều trên  | Hệ thống số do nhà sản xuất thẻ quy định (đơn vị cấp IDm) |Thẻ tiêu chuẩn FeliCa, v.v.|
 
+### Về PMm
 
+PMm (Thông số sản xuất) là thông số để xác định hiệu suất của đối tác truyền thông. <br><br> 
+Đây là giá trị 8 byte theo sau IDm trong phản hồi Bỏ phiếu (được mô tả sau). <br><br> 
+2 byte trên được gọi là mã IC và 6 byte tiếp theo được gọi là tham số thời gian phản hồi tối đa.<br><br> 
 
+![image](https://github.com/user-attachments/assets/da2df929-cf22-4b84-98c2-10b5185cbe9c) <br><br> 
+
+Mã IC là mã để nhận biết loại chip IC. Byte 1 phía trên cho biết loại ROM và 1 byte phía dưới cho biết loại IC. <br><br> 
+Những mã có mã IC FF FF được sử dụng trong phiên bản sửa đổi JIS X 6319-4:2005 và thông số kỹ thuật của Diễn đàn NFC. <br><br> 
+
+Các giá trị khác được gán cho từng loại chip IC và do Sony quản lý.<br><br> 
+Ví dụ: PMm của PASMO của tôi là 10 0B 4B 42 7C 7B 30 01, do đó phép chia như sau.<br><br> 
+
+PMm: [[10 0B] [4B 42 7C 7B 30 01]] <br><br> 
+[10 0B] :    <br><br>  
+[4B 42 7C 7B 30 01] :      <br><br>  
    
     
       
