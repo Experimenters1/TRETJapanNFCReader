@@ -442,9 +442,19 @@ Các giá trị khác được gán cho từng loại chip IC và do Sony quản
 Ví dụ: PMm của PASMO của tôi là 10 0B 4B 42 7C 7B 30 01, do đó phép chia như sau.<br><br> 
 
 PMm: [[10 0B] [4B 42 7C 7B 30 01]] <br><br> 
-[10 0B] :    <br><br>  
-[4B 42 7C 7B 30 01] :      <br><br>  
-   
+[10 0B] : mã IC   <br><br>  
+[4B 42 7C 7B 30 01] : Tham số thời gian phản hồi tối đa   <br><br>  
+
+Bạn có thể xác định FeliCa nào dựa trên loại IC. <br><br>
+ [Sony: Danh sách các sản phẩm có thông tin kỹ thuật:).](https://www.sony.co.jp/Products/felica/business/tech-support/list.html) Xem FeliCa (Tiêu chuẩn FeliCa).<br><br>
+
+ Loại IC của PASMO của tôi là 0B, nhưng tôi không thể tìm thấy nó trong danh sách trên... Tôi tự hỏi liệu tôi có sai ở đây không. <br><br>
+
+ Tham số thời gian phản hồi tối đa được xử lý khác nhau tùy theo lệnh.<br><br>
+
+ 
+
+
     
       
   + ) NFC là một tiêu chuẩn giao tiếp trường gần.
