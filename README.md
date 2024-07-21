@@ -452,7 +452,15 @@ Bạn có thể xác định FeliCa nào dựa trên loại IC. <br><br>
 
  Tham số thời gian phản hồi tối đa được xử lý khác nhau tùy theo lệnh.<br><br>
 
- 
+ ![image](https://github.com/user-attachments/assets/fc185bb5-4634-46d2-a020-568b354d7099) <br><br>
+
+Phân tích 6 byte được hiển thị trong hình trên và thời gian phản hồi tối đa được tính bằng công thức sau. <br><br>
+
+Thời gian phản hồi tối đa (ms) = T × [(B + 1) × n + (A + 1) × 4^E  <br><br>
+
+Ý nghĩa của n thay đổi tùy theo lệnh. <br><br> 
+
+Tôi không chắc cột "Vị trí" trong bảng có nghĩa là gì, nhưng tôi sẽ đăng nó như vậy. <br><br>
 
 
     
