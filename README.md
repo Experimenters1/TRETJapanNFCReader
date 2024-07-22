@@ -462,7 +462,11 @@ Thời gian phản hồi tối đa (ms) = T × [(B + 1) × n + (A + 1) × 4^E  <
 
 Tôi không chắc cột "Vị trí" trong bảng có nghĩa là gì, nhưng tôi sẽ đăng nó như vậy. <br><br>
 
-
+| chức vụ | Loại lệnh | Tên lệnh | Ý nghĩa của n trong công thức tính |
+|:----------|:-----------:|:-----------:|---------:|
+|D10    | Các lệnh có thời gian phản hồi khác nhau tùy thuộc vào thành phần gói   | Yêu cầu dịch vụ Yêu cầu dịch vụ v2   | Số nút|
+| Hàng 2    | Giá trị 4   | Giá trị 5   | Giá trị 6|
+| Hàng 3    | Giá trị 7   | Giá trị 8   | Giá trị 9|
     
       
   + ) NFC là một tiêu chuẩn giao tiếp trường gần.
