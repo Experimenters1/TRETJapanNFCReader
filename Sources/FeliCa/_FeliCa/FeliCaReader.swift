@@ -19,6 +19,9 @@ open class FeliCaReader: JapanNFCReader {
     public let delegate: FeliCaReaderSessionDelegate?
     public private(set) var systemCodes: [FeliCaSystemCode] = []
     public private(set) var serviceCodes: [FeliCaSystemCode: [(serviceCode: FeliCaServiceCode, numberOfBlock: Int)]] = [:]
+   
+    
+   
     
     private init() {
         fatalError()
@@ -60,13 +63,16 @@ open class FeliCaReader: JapanNFCReader {
             return
         }
         
-        self.session = NFCTagReaderSession(pollingOption: .iso18092, delegate: self)
-        self.session?.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
+        self.session = NFCTagReaderSession(pollingOption: [.iso14443, .iso15693, .iso18092], delegate: self)
+//        self.session?.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
         self.session?.begin()
     }
     
     open override func tagReaderSession(_ session: NFCTagReaderSession, didInvalidateWithError error: Error) {
         if let readerError = error as? NFCReaderError {
+            if readerError.code == .readerSessionInvalidationErrorUserCanceled {
+                print("5fb4bf56d1b56f1b56f1b56fd1b56fdb1fdb1fd61bdf54545%fvhdjhvjd bo huy")
+            }
             if (readerError.code != .readerSessionInvalidationErrorFirstNDEFTagRead)
                 && (readerError.code != .readerSessionInvalidationErrorUserCanceled) {
                 print("""
@@ -78,7 +84,16 @@ open class FeliCaReader: JapanNFCReader {
             }
         }
         self.delegate?.japanNFCReaderSession(didInvalidateWithError: error)
+        print("5fb4bf56d1b56f1b56f1b56fd1b56fdb1fdb1fd61bdf54545%fvhdjhvjd bo huy con huy")
     }
+    
+    
+    
+    
+    
+
+    
+
     
     open override func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
         if tags.count > 1 {
@@ -98,22 +113,95 @@ open class FeliCaReader: JapanNFCReader {
                 return
             }
             
-            guard case NFCTag.feliCa(let feliCaTag) = tag else {
+            switch tag {
+            case .feliCa(let feliCaTag):
+                session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
+
+                
+                
+                DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
+                    if self.shouldReadFeliCaTag(feliCaTag) {
+                        if self.checkFeliCaTagData(feliCaTag) {
+                            self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
+                        } else{
+                            session.invalidate(errorMessage: Localized.nfcTagReaderSessionConnectErrorMessage.string())
+                            self.Crash_app_IC_CardReaderSession()
+                        }
+                    } else {
+                        session.invalidate(errorMessage: Localized.nfcTagReaderSessionConnectErrorMessage.string())
+                        self.Crash_app_IC_CardReaderSession()
+                    }
+                }
+                
+                print("@#%^&&&&&&&hudgvfhbvhkfsbvjsdfhvjsvjsfb526f5db6fb6f5db6f5b6f5b65dfb66fd5b65b6d5b65b5b5d")
+                
+            case .iso7816, .iso15693,.miFare:
+                
+
+                
+                session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
+                        DispatchQueue(label: "TRETJPNRCardTypeReader", qos: .default).async {
+                            
+                            session.alertMessage = Localized.nfcTagReaderSessionDoneMessage.string()
+                            session.invalidate()
+                            self.check_IC_CardReaderSession()
+                        }
+
+                
+                
+                
+            default:
                 let retryInterval = DispatchTimeInterval.milliseconds(1000)
                 session.alertMessage = Localized.nfcTagReaderSessionDifferentTagTypeErrorMessage.string()
                 DispatchQueue.global().asyncAfter(deadline: .now() + retryInterval, execute: {
                     session.restartPolling()
                     session.alertMessage = Localized.nfcReaderSessionAlertMessage.string()
                 })
-                return
-            }
-            
-            session.alertMessage = Localized.nfcTagReaderSessionReadingMessage.string()
-            
-            DispatchQueue(label: "TRETJPNRFeliCaReader", qos: .default).async {
-                self.feliCaTagReaderSessionReadWithoutEncryption(session, feliCaTag: feliCaTag)
             }
         }
+    }
+    
+
+    
+    open func shouldReadFeliCaTag(_ feliCaTag: NFCFeliCaTag) -> Bool {
+        // Kiểm tra nếu có dữ liệu để đọc từ thẻ FeliCa
+        for targetSystemCode in self.systemCodes {
+            let (pmm, systemCode, _) = feliCaTag.polling(systemCode: targetSystemCode.bigEndian.data, requestCode: .systemCode, timeSlot: .max1)
+            if targetSystemCode.bigEndian.data == systemCode {
+                return true
+            }
+        }
+        return false
+    }
+    
+    
+    func checkFeliCaTagData(_ feliCaTag: NFCFeliCaTag) -> Bool {
+            for targetSystemCode in self.systemCodes {
+                let serviceCodeData = self.serviceCodes[targetSystemCode]!
+                for (serviceCode, numberOfBlock) in serviceCodeData {
+                    let blockList = (0..<numberOfBlock).map { (block) -> Data in
+                        Data([0x80, UInt8(block)])
+                    }
+                    let (status1, status2, blockData, error) = feliCaTag.readWithoutEncryption36(serviceCode: serviceCode.data, blockList: blockList)
+
+                    if blockList.isEmpty || blockData.isEmpty || serviceCodeData.isEmpty {
+                        return false
+                    }
+                }
+            }
+            return true
+        }
+    
+    
+    
+    
+    
+    open func check_IC_CardReaderSession(){
+        self.delegate?.check_IC_CardReaderSession()
+    }
+    
+    open func Crash_app_IC_CardReaderSession(){
+        self.delegate?.Crash_app_IC_CardReaderSession()
     }
     
     open func feliCaTagReaderSessionReadWithoutEncryption(_ session: NFCTagReaderSession, feliCaTag: NFCFeliCaTag) {
@@ -165,6 +253,7 @@ open class FeliCaReader: JapanNFCReader {
     
     open func feliCaReaderSession(didRead feliCaData: FeliCaData, pollingErrors: [FeliCaSystemCode : Error?]?, readErrors: [FeliCaSystemCode : [FeliCaServiceCode : Error]]?) {
         self.delegate?.feliCaReaderSession(didRead: feliCaData, pollingErrors: pollingErrors, readErrors: readErrors)
+       
     }
     
     @available(*, unavailable)
